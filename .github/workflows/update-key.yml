@@ -14,7 +14,10 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Generate random key
         id: generate
@@ -25,9 +28,11 @@ jobs:
       - name: Save key to file
         run: echo "${{ steps.generate.outputs.key }}" > current_key.txt
 
-      - name: Commit new key
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "🔑 Новый ключ: ${{ steps.generate.outputs.key }}"
-          add: "current_key.txt"
-          pull: '--rebase --autostash'
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add current_key.txt
+          git commit -m "🔑 Новый ключ: ${{ steps.generate.outputs.key }}"
+          git pull --rebase origin main
+          git push
