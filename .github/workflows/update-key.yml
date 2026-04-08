@@ -2,8 +2,12 @@ name: Update Roblox Key Every Hour
 
 on:
   schedule:
-    - cron: '0 * * * *' # каждый час
+    - cron: '0 * * * *'
   workflow_dispatch:
+
+# Эта настройка убирает желтое предупреждение про Node.js 20
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update-key:
