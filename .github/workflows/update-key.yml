@@ -36,3 +36,4 @@ jobs:
           git commit -m "🔑 Новый ключ: ${{ steps.generate.outputs.key }}"
           git pull --rebase origin main
           git push
+
