@@ -1,0 +1,29 @@
+name: Update Roblox Key Every Hour
+
+on:
+  schedule:
+    - cron: '0 * * * *' # каждый час
+  workflow_dispatch:
+
+jobs:
+  update-key:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate random key
+        id: generate
+        run: |
+          NEW_KEY=$(openssl rand -hex 12 | tr '[:lower:]' '[:upper:]')
+          echo "key=$NEW_KEY" >> $GITHUB_OUTPUT
+
+      - name: Save key to file
+        run: echo "${{ steps.generate.outputs.key }}" > current_key.txt
+
+      - name: Commit new key
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "🔑 Новый ключ: ${{ steps.generate.outputs.key }}"
+          add: "current_key.txt"
